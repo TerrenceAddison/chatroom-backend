@@ -1,4 +1,4 @@
-import { Model, Column, Table, DataType, ForeignKey, BelongsToMany, HasMany } from 'sequelize-typescript';
+import { Model, Column, Table, DataType, ForeignKey } from 'sequelize-typescript';
 
 @Table({ tableName: 'users' })
 class User extends Model {
@@ -13,9 +13,6 @@ class User extends Model {
 
   @Column(DataType.DATE)
   lastLoginAt!: Date;
-
-  @BelongsToMany(() => ChatRoom, 'chat_room_members', 'userId', 'chatRoomId')
-  chatRooms!: ChatRoom[];
 }
 
 @Table({ tableName: 'chat_rooms' })
@@ -23,8 +20,13 @@ class ChatRoom extends Model {
   @Column({ primaryKey: true, autoIncrement: true })
   id!: number;
 
-  @BelongsToMany(() => User, 'chat_room_members', 'chatRoomId', 'userId')
-  members!: User[];
+  @ForeignKey(() => User)
+  @Column(DataType.STRING)
+  member1Id!: string;
+
+  @ForeignKey(() => User)
+  @Column(DataType.STRING)
+  member2Id!: string;
 
   @Column(DataType.DATE)
   createdAt!: Date;
@@ -40,12 +42,12 @@ class Message extends Model {
   content!: string;
 
   @ForeignKey(() => User)
-  @Column(DataType.INTEGER)
-  senderId!: number;
+  @Column(DataType.STRING)
+  senderId!: string;
 
   @ForeignKey(() => ChatRoom)
-  @Column(DataType.INTEGER)
-  chatRoomId!: number;
+  @Column(DataType.STRING)
+  chatRoomId!: string;
 
   @Column(DataType.DATE)
   createdAt!: Date;
