@@ -4,13 +4,14 @@ import sequelize from './db';
 import fs from 'fs';
 import { Client } from 'pg';
 import { User } from './models';
-// import routes from './routes';
+import routes from './routes';
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
-// app.use('/', routes);
+app.use(express.urlencoded({ extended: false }));
+app.use('/', routes);
 const port =  8000;
 const { POSTGRES_HOST, POSTGRES_PORT, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB } = process.env;
 
