@@ -1,7 +1,8 @@
 import express from 'express';
-import { sendMessage } from './controller';
+import { sendMessage, getChatRoomsByUser } from './controller';
 
 const routes = express.Router();
 routes.post('/send-message', sendMessage);
+routes.get('/chatrooms/:userId', getChatRoomsByUser);
 
 export default routes;

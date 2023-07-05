@@ -15,7 +15,7 @@ export const sendMessage = async (req: Request, res: Response) => {
     if(users.length !== 2) {
         return res.status(404).json({ error: 'Sender or receiver not found' });
     }
-    
+
     const chatRoom = await ChatRoom.findOne({
       where: {
         [Op.or]: [
@@ -48,5 +48,30 @@ export const sendMessage = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error sending message:', error);
     res.status(500).json({ error: 'An error occurred while sending the message' });
+  }
+};
+
+export const getChatRoomsByUser = async (req: Request, res: Response) => {
+  try{
+    const { userId } = req.params;
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    const chatRooms = await ChatRoom.findAll({
+      where: {
+        [Op.or]: [
+          { member1Id: userId },
+          { member2Id: userId }
+        ],
+      },
+    });
+
+    res.status(200).json({ chatRooms });
+  } catch (error) {
+    console.error('Error getting chatrooms:', error);
+    res.status(500).json({ error: 'An error occurred while getting chatrooms' });
   }
 };
