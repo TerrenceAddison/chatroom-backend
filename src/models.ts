@@ -46,8 +46,8 @@ class Message extends Model {
   senderId!: string;
 
   @ForeignKey(() => ChatRoom)
-  @Column(DataType.STRING)
-  chatRoomId!: string;
+  @Column(DataType.INTEGER)
+  chatRoomId!: number;
 
   @Column(DataType.DATE)
   createdAt!: Date;

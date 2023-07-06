@@ -75,3 +75,30 @@ export const getChatRoomsByUser = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'An error occurred while getting chatrooms' });
   }
 };
+
+export const getMessagesInChatRoom = async (req: Request, res: Response) => {
+  try {
+    
+    const chatRoomId = parseInt(req.params.chatRoomId, 10); // Convert chatRoomId to an integer
+
+    if (isNaN(chatRoomId)) {
+      return res.status(400).json({ error: 'Invalid chat room ID' });
+    }
+
+    const chatRoom = await ChatRoom.findByPk(chatRoomId);
+    if (!chatRoom) {
+      return res.status(404).json({ error: 'Chat room not found' });
+    }
+
+    const messages = await Message.findAll({
+      where: {
+        chatRoomId: chatRoom.id,
+      },
+    });
+
+    res.status(200).json({ messages });
+  } catch (error) {
+    console.error('Error getting messages:', error);
+    res.status(500).json({ error: 'An error occurred while getting messages' });
+  }
+};
