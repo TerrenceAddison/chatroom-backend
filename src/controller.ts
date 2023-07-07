@@ -10,6 +10,10 @@ export const sendMessage = async (req: Request, res: Response) => {
     if(!senderId || !receiverId || !content) {
         return res.status(400).json({ error: 'Missing required parameters' });
     }
+    
+    if (senderId === receiverId) {
+      return res.status(400).json({ error: 'Cannot send a message to oneself' });
+    }
 
     const users = await User.findAll({where: {id:[senderId, receiverId]}});
     if(users.length !== 2) {
@@ -78,7 +82,7 @@ export const getChatRoomsByUser = async (req: Request, res: Response) => {
 
 export const getMessagesInChatRoom = async (req: Request, res: Response) => {
   try {
-    
+
     const chatRoomId = parseInt(req.params.chatRoomId, 10); // Convert chatRoomId to an integer
 
     if (isNaN(chatRoomId)) {
