@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - chatroom-network
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    networks:
+      - chatroom-network
+
+networks:
+  chatroom-network:
+volumes:
+  postgres-data:
